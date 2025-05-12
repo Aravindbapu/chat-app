@@ -11,24 +11,31 @@ export const ChatProvider = ({ children }) => {
     const [users, setUsers] = useState([]);
     const [selectedUser, setSelectedUser] = useState(null)
     const [unseenMessages, setUnseenMessages] = useState({})
+    const [isLoadingUsers, setIsLoadingUsers] = useState(false);
+    const [isLoadingMessages, setIsLoadingMessages] = useState(false);
 
     const {socket, axios} = useContext(AuthContext);
 
     //function to get users for sidebar
     const getUsers = async ()=>{
+        setIsLoadingUsers(true);
         try {
             const {data} = await axios.get("/api/messages/users");
             if(data.success){
                 setUsers(data.users)
                 setUnseenMessages(data.unseenMessages)
+                toast.success("User list loaded!");
             }
         } catch (error) {
             toast.error(error.message)
+        } finally {
+            setIsLoadingUsers(false);
         }
     }
 
     //function to get messages for selected user
     const getMessages = async (userId)=>{
+        setIsLoadingMessages(true);
         try {
             const { data } = await axios.get(`/api/messages/${userId}`); // <-- fix endpoint
             if(data.success){
@@ -36,6 +43,8 @@ export const ChatProvider = ({ children }) => {
             }
         } catch (error) {
             toast.error(error.message)
+        } finally {
+            setIsLoadingMessages(false);
         }
     }
 
@@ -50,6 +59,7 @@ export const ChatProvider = ({ children }) => {
             const { data } = await axios.post(`/api/messages/send`, { ...messageData, receiverId: selectedUser._id });
             if(data.success){
                 setMessages((prevMessages) => [...prevMessages, data.message])
+                toast.success("Message sent!");
             }else{
                 toast.error(data.message)
             }
@@ -85,7 +95,8 @@ export const ChatProvider = ({ children }) => {
     }, [socket, selectedUser])
 
     const value = {
-        messages, users, selectedUser, getUsers, getMessages, sendMessage, setSelectedUser, unseenMessages, setUnseenMessages
+        messages, users, selectedUser, getUsers, getMessages, sendMessage, setSelectedUser, unseenMessages, setUnseenMessages,
+        isLoadingUsers, isLoadingMessages
     }
 
     return (

@@ -9,13 +9,13 @@ export const signup = async (req, res) => {
 
     try {
         if (!fullName || !email || !password || !bio){
-            return res.json({success: false, message: "Missing Details"})
+            return res.status(400).json({success: false, message: "Missing Details"})
         }
 
         const user = await User.findOne({ email });
 
         if (user){
-            return res.json({success: false, message: "Account already exists"})
+            return res.status(409).json({success: false, message: "Account already exists"})
         }
 
         const salt = await bcrypt.genSalt(10);
@@ -31,7 +31,7 @@ export const signup = async (req, res) => {
 
     } catch (error) {
         console.log(error.message);
-        res.json({success: true, message: error.message}); 
+        res.status(500).json({success: false, message: error.message}); 
     }
 
 }
@@ -43,10 +43,14 @@ export const login = async (req, res) => {
        const { email, password } = req.body; 
        const userData = await User.findOne({email})
 
+       if (!userData) {
+            return res.status(401).json({success: false, message: "Invalid Credentials"});
+       }
+
        const isPasswordCorrect = await bcrypt.compare(password, userData.password);
 
        if (!isPasswordCorrect){
-            return res.json({success: false, message: "Invalid Credentials"});
+            return res.status(401).json({success: false, message: "Invalid Credentials"});
        }
 
        const token = generateToken(userData._id)
@@ -56,7 +60,7 @@ export const login = async (req, res) => {
 
     } catch (error) {
        console.log(error.message);
-       res.json({success: true, message: error.message});  
+       res.status(500).json({success: false, message: error.message});  
     }
 }
 // controller to check if user is authenticated
@@ -82,6 +86,6 @@ export const updateProfile = async (req, res) => {
         res.json({success: true, user: updatedUser})
     } catch (error) {
         console.log(error.message);
-        res.json({success: false, message: error.message})
+        res.status(500).json({success: false, message: error.message})
     }
 }
