@@ -6,7 +6,8 @@ import { connectDB } from "./lib/db.js";
 import userRouter from "./routes/userRoutes.js";
 import messageRouter from "./routes/messageRoutes.js";
 import { Server } from "socket.io";
-
+import helmet from "helmet";
+import morgan from "morgan";
 
 //Create Express app and HTTP server
 const app = express();
@@ -38,8 +39,22 @@ io.on("connection", (socket)=>{
 })
 //Middleware setup
 app.use(express.json({limit: "4mb"}));
-app.use(cors());
+app.use(helmet());
+app.use(morgan("dev"));
 
+const allowedOrigins = [process.env.FRONTEND_URL];
+app.use(cors({
+    origin: function (origin, callback) {
+        // allow requests with no origin (like mobile apps, curl, etc.)
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.includes(origin)) {
+            return callback(null, true);
+        } else {
+            return callback(new Error("Not allowed by CORS"));
+        }
+    },
+    credentials: true
+}));
 
 // Routes setup
 app.use("/api/status", (req, res) => res.send("Server is live"));

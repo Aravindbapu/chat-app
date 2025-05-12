@@ -2,9 +2,14 @@ import { generateToken } from "../lib/utils.js";
 import User from "../models/User.js";
 import bcrypt from "bcryptjs";
 import cloudinary from "../lib/cloudinary.js";
+import { validationResult } from "express-validator";
 
 // Signup a new user
 export const signup = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ success: false, errors: errors.array() });
+    }
     const { fullName, email, password, bio } = req.body;
 
     try {
@@ -38,7 +43,10 @@ export const signup = async (req, res) => {
 
 // controller to login a user
 export const login = async (req, res) => {
-
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ success: false, errors: errors.array() });
+    }
     try {
        const { email, password } = req.body; 
        const userData = await User.findOne({email})

@@ -38,13 +38,13 @@ const ProfilePage = () => {
           
           <div className="flex flex-col items-center gap-3">
             <label htmlFor="avatar" className='flex flex-col items-center gap-2 cursor-pointer group'>
-              <div className="relative w-24 h-24 rounded-full overflow-hidden border-2 border-gray-600/50 transition-colors">
+              <div className="relative w-24 h-24 rounded-full overflow-hidden border-2 border-gray-600/50 transition-colors cursor-pointer">
                 <img 
                   src={selectedImg ? URL.createObjectURL(selectedImg) : assets.avatar_icon} 
                   alt="" 
-                  className="w-full h-full object-cover rounded-full"
+                  className="w-full h-full object-cover rounded-full cursor-pointer"
                 />
-                <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
                   <span className="text-sm text-white">Change Photo</span>
                 </div>
               </div>
@@ -79,7 +79,7 @@ const ProfilePage = () => {
 
           <button 
             type="submit" 
-            className="w-full mt-2 py-3 px-4 bg-gradient-to-r from-violet-500 to-violet-600 text-white rounded-lg hover:opacity-90 transition-opacity"
+            className="w-full mt-2 py-3 px-4 bg-gradient-to-r from-violet-500 to-violet-600 text-white rounded-lg hover:opacity-90 transition-opacity cursor-pointer"
           >
             Save Changes
           </button>

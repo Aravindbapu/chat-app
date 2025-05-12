@@ -9,3 +9,18 @@
 ::-webkit-scrollbar{
   display: none;
 }
+
+/* Smooth cursor transition for interactive elements */
+button, [role="button"], .cursor-pointer, input[type="file"], label[for], a {
+  transition: cursor 0.2s;
+}
+
+input, textarea {
+  cursor: text;
+}
+
+/* Optional: highlight focus for accessibility */
+button:focus, [role="button"]:focus, .cursor-pointer:focus {
+  outline: 2px solid #a78bfa;
+  outline-offset: 2px;
+}
