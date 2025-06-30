@@ -24,7 +24,6 @@ export const ChatProvider = ({ children }) => {
             if(data.success){
                 setUsers(data.users)
                 setUnseenMessages(data.unseenMessages)
-                toast.success("User list loaded!");
             }
         } catch (error) {
             toast.error(error.message)
